@@ -36,7 +36,7 @@ class TitleDataset(Dataset):
         inputs = self.tokenizer.encode(
             '<|startoftext|>' + text + " TL;DR: " + title + '<|endoftext|>',
             truncation=True, 
-            padding='max_len',
+            padding='max_length',
             max_length=self.max_len,
             return_tensors = 'pt'
         )
