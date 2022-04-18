@@ -78,7 +78,7 @@ def run(params, save_model=True):
         train_dataset, batch_size=args.train_batch_size
     )
 
-    valid_dataset = dataset.ToxicityDatasetBERT(
+    valid_dataset = dataset.TitleDataset(
         df_val.text.values, 
         df_val.title.values, 
         tokenizer, 
@@ -89,7 +89,7 @@ def run(params, save_model=True):
         valid_dataset, batch_size=args.val_batch_size
     )
 
-    test_dataset = dataset.ToxicityDatasetBERT(
+    test_dataset = dataset.TitleDataset(
         df_test.text.values, 
         df_test.title.values, 
         tokenizer, 
@@ -185,7 +185,7 @@ def main():
     else:
         params = {
             'lr': args.lr,
-            'bert_path': args.gpt_path,
+            'gpt_path': args.gpt_path,
         }
 
         run(params)

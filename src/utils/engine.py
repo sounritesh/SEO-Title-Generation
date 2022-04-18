@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from .config import DEVICE
 
 
 def train_fn(data_loader, model, optimizer, device):
@@ -25,7 +24,8 @@ def train_fn(data_loader, model, optimizer, device):
 
         optimizer.zero_grad()
 
-        loss, logits, _ = model(ids, labels=ids)
+        output = model(ids, labels=ids)
+        loss = output["loss"]
 
         loss.backward()
         loss_tot += loss.item()
@@ -55,7 +55,8 @@ def eval_fn(data_loader, model, device):
     with torch.no_grad():
         for bi, d in tqdm(enumerate(data_loader), total=len(data_loader), position=0, leave=True):
             ids = d["input_ids"].to(device)
-            loss, logits, _ = model(ids, labels=ids)
+            output = model(ids, labels=ids)
+            loss = output["loss"]
 
             loss.backward()
             loss_tot += loss.item()
