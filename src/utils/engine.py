@@ -20,7 +20,7 @@ def train_fn(data_loader, model, optimizer, device):
     model.train()
     loss_tot = 0
     for bi, d in tqdm(enumerate(data_loader), total=len(data_loader), position=0, leave=True):
-        ids = d["input_ids"].to(device)
+        ids = d.to(device)
 
         optimizer.zero_grad()
 
@@ -54,7 +54,7 @@ def eval_fn(data_loader, model, device):
     loss_tot = 0
     with torch.no_grad():
         for bi, d in tqdm(enumerate(data_loader), total=len(data_loader), position=0, leave=True):
-            ids = d["input_ids"].to(device)
+            ids = d.to(device)
             output = model(ids, labels=ids)
             loss = output["loss"]
 
