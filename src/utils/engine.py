@@ -58,7 +58,6 @@ def eval_fn(data_loader, model, device):
             output = model(ids, labels=ids)
             loss = output["loss"]
 
-            loss.backward()
             loss_tot += loss.item()
 
     epoch_loss =  loss_tot/len(data_loader)

@@ -75,7 +75,7 @@ def run(params, save_model=True):
         args.preprocess
     )
     train_data_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.train_batch_size
+        train_dataset, batch_size=args.train_batch_size, shuffle=True
     )
 
     valid_dataset = dataset.TitleDataset(
@@ -86,7 +86,7 @@ def run(params, save_model=True):
         args.preprocess
     )
     valid_data_loader = torch.utils.data.DataLoader(
-        valid_dataset, batch_size=args.val_batch_size
+        valid_dataset, batch_size=args.val_batch_size, shuffle=True
     )
 
     test_dataset = dataset.TitleDataset(
@@ -97,7 +97,7 @@ def run(params, save_model=True):
         args.preprocess
     )
     test_data_loader = torch.utils.data.DataLoader(
-        test_dataset, batch_size=args.val_batch_size
+        test_dataset, batch_size=args.val_batch_size, shuffle=True
     )
 
     device = torch.device("cuda")
