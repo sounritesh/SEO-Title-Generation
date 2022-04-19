@@ -34,12 +34,23 @@ class TitleDataset(Dataset):
             title = self.clean_text(title)
 
         inputs = self.tokenizer.encode(
-            '<|startoftext|>' + text + " TL;DR: " + title + '<|endoftext|>',
+            '<|startoftext|>' + text + '<|endoftext|>',
             truncation=True, 
             padding='max_length',
             max_length=self.max_len,
             return_tensors = 'pt'
         )
 
-        return inputs
+        labels = self.tokenizer.encode(
+            '<|startoftext|>' + title + '<|endoftext|>',
+            truncation=True, 
+            padding='max_length',
+            max_length=self.max_len,
+            return_tensors = 'pt'
+        )
+
+        return {
+            "inputs": inputs,
+            "labels": labels
+        }
 
