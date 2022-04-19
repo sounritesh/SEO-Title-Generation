@@ -45,7 +45,7 @@ class TitleDataset(Dataset):
             '<|startoftext|>' + title + '<|endoftext|>',
             truncation=True, 
             padding='max_length',
-            max_length=16,
+            max_length=self.max_len,
             return_tensors = 'pt'
         )
 
