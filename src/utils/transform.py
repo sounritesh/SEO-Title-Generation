@@ -1,5 +1,6 @@
 import torch
 from tqdm.notebook import tqdm, tnrange
+import torch.nn as nn
 
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
     """ Filter a distribution of logits using top-k and/or nucleus (top-p) filtering
@@ -7,8 +8,6 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
             logits: logits distribution shape (vocabulary size)
             top_k > 0: keep only top k tokens with highest probability (top-k filtering).
             top_p > 0.0: keep the top tokens with cumulative probability >= top_p (nucleus filtering).
-                Nucleus filtering is described in Holtzman et al. (http://arxiv.org/abs/1904.09751)
-        From: https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
     """
     assert logits.dim() == 1  # batch size 1 for now - could be updated for more but the code would be less clear
     top_k = min(top_k, logits.size(-1))  # Safety check
@@ -19,7 +18,7 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 
     if top_p > 0.0:
         sorted_logits, sorted_indices = torch.sort(logits, descending=True)
-        cumulative_probs = torch.cumsum(F.softmax(sorted_logits, dim=-1), dim=-1)
+        cumulative_probs = torch.cumsum(nn.Softmax()(sorted_logits, dim=-1), dim=-1)
 
         # Remove tokens with cumulative probability above the threshold
         sorted_indices_to_remove = cumulative_probs > top_p
@@ -53,6 +52,6 @@ def sample_seq(model, context, length, device, temperature=1, top_k=0, top_p=0.0
             outputs = model(**inputs)  # Note: we could also use 'past' with GPT-2/Transfo-XL/XLNet (cached hidden-states)
             next_token_logits = outputs[0][0, -1, :] / temperature
             filtered_logits = top_k_top_p_filtering(next_token_logits, top_k=top_k, top_p=top_p)
-            next_token = torch.multinomial(F.softmax(filtered_logits, dim=-1), num_samples=1)
+            next_token = torch.multinomial(nn.Softmax()(filtered_logits, dim=-1), num_samples=1)
             generated = torch.cat((generated, next_token.unsqueeze(0)), dim=1)
     return generated
