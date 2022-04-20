@@ -11,6 +11,8 @@ class TitleDataset(Dataset):
         self.max_len = max_len
         self.preprocess = preprocess
         self.extra_length = 5
+        self.eos = self.tokenizer.eos_token
+        self.eos_id = self.tokenizer.eos_token_id
 
     def __len__(self):
         return len(self.titles)
