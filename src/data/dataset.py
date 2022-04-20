@@ -1,6 +1,7 @@
 from calendar import day_abbr
 from torch.utils.data import Dataset
 import re
+import torch
 
 class TitleDataset(Dataset):
     def __init__(self, texts, titles, tokenizer, max_len, preprocess) -> None:
@@ -51,10 +52,10 @@ class TitleDataset(Dataset):
 
         tokenized = self.tokenizer.encode(
             seo_post,
-            return_tensors = 'pt'
+            # return_tensors = 'pt'
         )
 
-        padded = self.pad_truncate(tokenized)
+        padded = torch.tensor(self.pad_truncate(tokenized))
 
         # labels = self.tokenizer.encode(
         #     '<|startoftext|>' + title + '<|endoftext|>',
