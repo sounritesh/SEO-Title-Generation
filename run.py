@@ -124,7 +124,7 @@ def run(params, save_model=True):
     ]
 
     num_train_steps = int(len(df_train) / args.train_batch_size * args.epochs)
-    optimizer = Adam(optimizer_parameters, lr=params['lr'])
+    optimizer = SGD(optimizer_parameters, lr=params['lr'])
 
     scheduler = lr_scheduler.StepLR(
         optimizer,

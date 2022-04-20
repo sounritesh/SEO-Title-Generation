@@ -14,6 +14,8 @@ class TitleDataset(Dataset):
         self.extra_length = 5
         self.eos = self.tokenizer.eos_token
         self.eos_id = self.tokenizer.eos_token_id
+        self.pad = self.tokenizer.pad_token
+        self.pad_id = self.tokenizer.pad_token_id
 
     def __len__(self):
         return len(self.titles)
@@ -33,7 +35,7 @@ class TitleDataset(Dataset):
         name_length = len(name) - self.extra_length
         if name_length < self.max_len:
             difference = self.max_len - name_length
-            result = name + [self.eos_id] * difference
+            result = name + [self.pad_id] * difference
         elif name_length > self.max_len:
             result = name[:self.max_len + (self.extra_length-1)]+[self.eos_id] 
         else:
