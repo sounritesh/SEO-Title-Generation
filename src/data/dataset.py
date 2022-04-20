@@ -35,7 +35,7 @@ class TitleDataset(Dataset):
             difference = self.max_len - name_length
             result = name + [self.eos_id] * difference
         elif name_length > self.max_len:
-            result = name[:self.max_len + 3]+[self.eos_id] 
+            result = name[:self.max_len + (self.extra_length-1)]+[self.eos_id] 
         else:
             result = name
         return result
