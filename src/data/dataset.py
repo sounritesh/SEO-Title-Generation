@@ -47,7 +47,7 @@ class TitleDataset(Dataset):
             text = self.clean_text(text)
             title = self.clean_text(title)
 
-        seo_post = text + " TL;DR: " + title + '<|endoftext|>'
+        seo_post = text + " TL;DR: " + title + self.eos
 
         tokenized = self.tokenizer.encode(
             seo_post,
