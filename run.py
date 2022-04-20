@@ -62,7 +62,7 @@ def run(params, save_model=True):
     tokenizer = transformers.GPT2Tokenizer.from_pretrained(
         params['gpt_path'], 
         do_lower_case=True,
-        bos_token='<|startoftext|>',
+        # bos_token='<|startoftext|>',
         eos_token='<|endoftext|>', 
         pad_token='<|pad|>'
     )

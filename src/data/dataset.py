@@ -10,6 +10,7 @@ class TitleDataset(Dataset):
         self.tokenizer = tokenizer
         self.max_len = max_len
         self.preprocess = preprocess
+        self.extra_length = 5
 
     def __len__(self):
         return len(self.titles)
@@ -25,6 +26,17 @@ class TitleDataset(Dataset):
         
         return text
 
+    def pad_truncate(self, name):
+        name_length = len(name) - self.extra_length
+        if name_length < self.max_len:
+            difference = self.max_len - name_length
+            result = name + [self.eos_id] * difference
+        elif name_length > self.max_len:
+            result = name[:self.max_len + 3]+[self.eos_id] 
+        else:
+            result = name
+        return result
+
     def __getitem__(self, idx):
         text = self.texts[idx]
         title = self.titles[idx]
@@ -33,24 +45,22 @@ class TitleDataset(Dataset):
             text = self.clean_text(text)
             title = self.clean_text(title)
 
-        inputs = self.tokenizer.encode(
-            '<|startoftext|>' + text + '<|endoftext|>',
-            truncation=True, 
-            padding='max_length',
-            max_length=self.max_len,
+        seo_post = text + " TL;DR: " + title + '<|endoftext|>'
+
+        tokenized = self.tokenizer.encode(
+            seo_post,
             return_tensors = 'pt'
         )
 
-        labels = self.tokenizer.encode(
-            '<|startoftext|>' + title + '<|endoftext|>',
-            truncation=True, 
-            padding='max_length',
-            max_length=self.max_len,
-            return_tensors = 'pt'
-        )
+        padded = self.pad_truncate(tokenized)
 
-        return {
-            "inputs": inputs,
-            "labels": labels
-        }
+        # labels = self.tokenizer.encode(
+        #     '<|startoftext|>' + title + '<|endoftext|>',
+        #     truncation=True, 
+        #     padding='max_length',
+        #     max_length=self.max_len,
+        #     return_tensors = 'pt'
+        # )
+
+        return padded
 
