@@ -96,17 +96,6 @@ class ThoughtDataset(Dataset):
 
         return text
 
-    def pad_truncate(self, name):
-        name_length = len(name) - self.extra_length
-        if name_length < self.max_len:
-            difference = self.max_len - name_length
-            result = name + [self.pad_id] * difference
-        elif name_length > self.max_len:
-            result = name[:self.max_len + (self.extra_length-1)]+[self.eos_id]
-        else:
-            result = name
-        return result
-
     def __getitem__(self, idx):
         text = self.texts[idx]
 
@@ -120,6 +109,4 @@ class ThoughtDataset(Dataset):
             # return_tensors = 'pt'
         )
 
-        padded = torch.tensor(self.pad_truncate(tokenized))
-
-        return padded
+        return tokenized
