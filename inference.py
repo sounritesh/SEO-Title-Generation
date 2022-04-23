@@ -23,7 +23,7 @@ parser.add_argument("--model_path", type=str, help="Path to fine-tuned model")
 parser.add_argument("--data_path", type=str, help="Path for saved dataset", default="")
 
 parser.add_argument("--n_samples", type=int, default=-1)
-parser.add_argument("--temp", type=int, default=1)
+parser.add_argument("--temp", type=float, default=1.0)
 parser.add_argument("--top_k", type=int, default=10)
 parser.add_argument("--top_p", type=float, default=0.8)
 parser.add_argument("--length", type=int, default=30)
@@ -82,7 +82,7 @@ def run(params):
 
             title = tokenizer.decode(sampled_seq.squeeze(), skip_special_tokens=True).split(" TL;DR: ")[-1]
 
-            f.write("\n{}".format(title))
+            f.write("\n\n~~{}~~".format(title))
 
     f.close()
 
