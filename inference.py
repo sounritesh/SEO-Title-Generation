@@ -74,9 +74,7 @@ def run(params):
             ids = d.to(device)
             sampled_seq = sample_seq(model, ids, args.length, device, args.temp, args.top_k, args.top_p)
 
-            title = tokenizer.decode(sampled_seq.squeeze(), skip_special_tokens=True).split(" TL;DR: ")
-            print(title)
-            title = title[-1]
+            title = tokenizer.decode(sampled_seq.squeeze(), skip_special_tokens=True)
 
             f.write("\n{}".format(title))
 
