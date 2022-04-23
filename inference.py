@@ -70,7 +70,7 @@ def run(params):
     f =  open(os.path.join(args.output_dir, "titles.txt"), "w")
 
     with torch.no_grad():
-        for d in tqdm(enumerate(predict_dataset), total=len(predict_dataset), position=0, leave=True):
+        for i, d in tqdm(enumerate(predict_dataset), total=len(predict_dataset), position=0, leave=True):
             ids = d.to(device)
             sampled_seq = sample_seq(model, ids, args.length, device, args.temp, args.top_k, args.top_p)
 
