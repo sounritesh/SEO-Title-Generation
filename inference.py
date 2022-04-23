@@ -25,7 +25,7 @@ parser.add_argument("--data_path", type=str, help="Path for saved dataset", defa
 parser.add_argument("--n_samples", type=int, default=-1)
 parser.add_argument("--temp", type=int, default=1)
 parser.add_argument("--top_k", type=int, default=10)
-parser.add_argument("--top_p", type=int, default=0.8)
+parser.add_argument("--top_p", type=float, default=0.8)
 parser.add_argument("--length", type=int, default=30)
 
 parser.add_argument("--preprocess", action="store_true", help="To apply preprocessing step")
