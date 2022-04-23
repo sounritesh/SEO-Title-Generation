@@ -1,7 +1,7 @@
 from ast import mod
 from src.config.config import device
 import src.data.dataset as dataset
-from src.data.prepare_data import load_data_from_mongo
+from src.data.prepare_data import prepare_dataset
 from src.utils.transform import sample_seq
 
 import torch
@@ -39,9 +39,9 @@ torch.manual_seed(args.seed)
 
 def run(params):
     if args.n_samples == -1:
-        df = load_data_from_mongo().sample(frac=1).reset_index(drop=True)
+        df = prepare_dataset().sample(frac=1).reset_index(drop=True)
     else:
-        df = load_data_from_mongo().sample(n=args.n_samples).reset_index(drop=True)
+        df = prepare_dataset().sample(n=args.n_samples).reset_index(drop=True)
 
     df.to_csv(os.path.join(args.output_dir, "thoughts.csv"), index=False)
 
