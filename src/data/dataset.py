@@ -28,7 +28,7 @@ class TitleDataset(Dataset):
         text = re.sub(r'@[\S]+\b', '', text) # mention
         text = re.sub(r'https?\S+', '', text) # link
         text = re.sub(r'\s+', ' ', text) # multiple white spaces
-        
+
         return text
 
     def pad_truncate(self, name):
@@ -69,3 +69,57 @@ class TitleDataset(Dataset):
 
         return padded
 
+class ThoughtDataset(Dataset):
+    def __init__(self, texts, tokenizer, max_len, preprocess) -> None:
+        super().__init__()
+        self.texts = texts
+        self.tokenizer = tokenizer
+        self.max_len = max_len
+        self.preprocess = preprocess
+        self.extra_length = 5
+        self.eos = self.tokenizer.eos_token
+        self.eos_id = self.tokenizer.eos_token_id
+        self.pad = self.tokenizer.pad_token
+        self.pad_id = self.tokenizer.pad_token_id
+
+    def __len__(self):
+        return len(self.texts)
+
+    @staticmethod
+    def clean_text(text):
+        text = str(text)
+        text = re.sub(r'[0-9"]', '', text) # number
+        text = re.sub(r'#[\S]+\b', '', text) # hash
+        text = re.sub(r'@[\S]+\b', '', text) # mention
+        text = re.sub(r'https?\S+', '', text) # link
+        text = re.sub(r'\s+', ' ', text) # multiple white spaces
+
+        return text
+
+    def pad_truncate(self, name):
+        name_length = len(name) - self.extra_length
+        if name_length < self.max_len:
+            difference = self.max_len - name_length
+            result = name + [self.pad_id] * difference
+        elif name_length > self.max_len:
+            result = name[:self.max_len + (self.extra_length-1)]+[self.eos_id]
+        else:
+            result = name
+        return result
+
+    def __getitem__(self, idx):
+        text = self.texts[idx]
+
+        if self.preprocess:
+            text = self.clean_text(text)
+
+        seo_post = text + " TL;DR: "
+
+        tokenized = self.tokenizer.encode(
+            seo_post,
+            # return_tensors = 'pt'
+        )
+
+        padded = torch.tensor(self.pad_truncate(tokenized))
+
+        return padded
