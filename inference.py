@@ -61,7 +61,6 @@ def run(params):
         args.preprocess
     )
 
-    device = torch.device(device)
     model = transformers.GPT2LMHeadModel.from_pretrained(params['gpt_path'])
     model.resize_token_embeddings(len(tokenizer))
     model.load_state_dict(torch.load(args.model_path, map_location=device))
