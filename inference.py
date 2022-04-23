@@ -31,8 +31,6 @@ parser.add_argument("--preprocess", action="store_true", help="To apply preproce
 parser.add_argument("--output_dir", type=str, help="Path to output directory for saving model checkpoints")
 parser.add_argument("--max_len", type=int, default=128, help="Specifies the maximum length of input sequence")
 
-parser.add_argument("--batch_size", type=int, default=2, help="Specifies the batch size")
-
 args = parser.parse_args()
 
 random.seed(args.seed)
@@ -43,7 +41,7 @@ def run(params):
     if args.n_samples == -1:
         df = load_data_from_mongo().sample(frac=1).reset_index(drop=True)
     else:
-        df = load_data_from_mongo().sample(n=args.n_sample).reset_index(drop=True)
+        df = load_data_from_mongo().sample(n=args.n_samples).reset_index(drop=True)
 
     df.to_csv(os.path.join(args.output_dir, "thoughts.csv"), index=False)
 
