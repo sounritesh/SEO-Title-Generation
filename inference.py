@@ -20,6 +20,7 @@ parser = ArgumentParser(description="Fine tune GPT-2 model on the dataset and ev
 parser.add_argument("--seed", type=int, default=0, help="Random seed for all sampling purposes")
 parser.add_argument("--gpt_path", default="gpt2", type=str, help="Path to base gpt model")
 parser.add_argument("--model_path", type=str, help="Path to fine-tuned model")
+parser.add_argument("--data_path", type=str, help="Path for saved dataset", default="")
 
 parser.add_argument("--n_samples", type=int, default=-1)
 parser.add_argument("--temp", type=int, default=1)
@@ -38,10 +39,15 @@ np.random.seed(args.seed)
 torch.manual_seed(args.seed)
 
 def run(params):
-    if args.n_samples == -1:
-        df = prepare_dataset().sample(frac=1).reset_index(drop=True)
+    if args.data_path == "":
+        df = prepare_dataset()
+        if args.n_samples == -1:
+            df = df.sample(frac=1).reset_index(drop=True)
+        else:
+            df = df.sample(n=args.n_samples).reset_index(drop=True)
     else:
-        df = prepare_dataset().sample(n=args.n_samples).reset_index(drop=True)
+        df = pd.read_csv(args.data_path)
+
 
     df.to_csv(os.path.join(args.output_dir, "thoughts.csv"), index=False)
 
