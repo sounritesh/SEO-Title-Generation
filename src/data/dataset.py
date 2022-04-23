@@ -1,4 +1,3 @@
-from calendar import day_abbr
 from torch.utils.data import Dataset
 import re
 import torch
@@ -109,4 +108,4 @@ class ThoughtDataset(Dataset):
             # return_tensors = 'pt'
         )
 
-        return tokenized
+        return torch.tensor(tokenized)
